@@ -7,6 +7,6 @@ Report: [Project Proposal.pdf](https://github.com/Al3x-T/Vibe/blob/main/Project%
 
 #### Deliverable 2 
 
-Report: Preliminary Results.pdf
+Report: [Preliminary Results.pdf](https://github.com/Al3x-T/Vibe/blob/main/Preliminary%20Results.pdf)
 
 Code: [preliminary_results.ipynb](https://github.com/Al3x-T/Vibe/blob/main/preliminary_results.ipynb)
