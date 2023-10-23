@@ -111,16 +111,16 @@ def generate_recommendations(input_artists, features, randomness = 1):
     sorted_artists = sorted(artist_scores.items(), key=lambda x: x[1], reverse=True)
     recommendations = {}
     threshold = 100 + (n - 100) * (1200 - 100) / (500 - 100)
-    st.write(f"Threshold: {threshold}")
+    #st.write(f"Threshold: {threshold}")
     for artist, score in sorted_artists:
         if artist_song_counts[artist] >= 2 and score > threshold and artist not in input_artists:
             top_songs = sorted(artist_songs[artist], key=lambda x: scores[id_to_index[x]], reverse=True)[:4]
             recommendations[artist] = top_songs
 
     # Print point values for each recommended artist and song
-    for artist, songs in recommendations.items():
-        st.write(f"{artist}: {artist_scores[artist]}")
-        st.write([scores[id_to_index[song_id]] for song_id in songs])
+    #for artist, songs in recommendations.items():
+    #    st.write(f"{artist}: {artist_scores[artist]}")
+    #    st.write([scores[id_to_index[song_id]] for song_id in songs])
 
     return recommendations
 
@@ -192,9 +192,9 @@ if len(artists) > 0:
                 with col_list[col_index]:
                     st.write(f"### {artist}")
                     for song_id in songs:
-                        #st.write(f'<iframe src="https://open.spotify.com/embed/track/{song_id}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>', unsafe_allow_html=True)
+                        st.write(f'<iframe src="https://open.spotify.com/embed/track/{song_id}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>', unsafe_allow_html=True)
                     #st.divider()
-                        st.text("")
+                    st.text("")
     else:
         st.header('Vibe - Music Recommendation System')
         st.divider()
