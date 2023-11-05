@@ -158,6 +158,7 @@ def load_data():
     return pd.read_parquet('data_encoded.parquet')
 
 df = load_data()
+#df[df['track_name'].str.contains(' remix', case=False)]
 
 # Create multiselect for artist selection
 artist_names = df['artist_name'].unique()
@@ -174,6 +175,8 @@ for artist in artists:
             # Check that artist and track name are unique
             track_id = df[(df['artist_name']==artist) & (df['track_name']==track_name)]['track_id'].unique()[0]
             track_ids.append(track_id)
+
+
 
 if len(artists) > 0:
     #add button to search for similar artists and songs
