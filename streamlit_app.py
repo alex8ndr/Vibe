@@ -136,8 +136,8 @@ with open("Vibe Wide.png", "rb") as f:
 
     st.sidebar.markdown(
         f"""
-        <div style="display:table;margin-top:-32%;margin-left:-6%;margin-bottom:10%">
-            <img src="data:image/png;base64,{data}" width="338" height="169">
+        <div style="display:table;margin-top:-32%;margin-left:-5%;margin-bottom:10%">
+            <img src="data:image/png;base64,{data}" width="334" height="167">
         </div>
         """,
         unsafe_allow_html=True,
