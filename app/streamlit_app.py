@@ -134,7 +134,7 @@ import base64
 import os
 print(os.listdir())
 
-with open("../app/Vibe Wide.png", "rb") as f:
+with open("app/Vibe Wide.png", "rb") as f:
     data = base64.b64encode(f.read()).decode("utf-8")
 
     st.sidebar.markdown(
@@ -158,7 +158,7 @@ with st.sidebar.expander('Settings', expanded=False):
 
 @st.cache_data
 def load_data():
-    return pd.read_parquet('../data/data_encoded.parquet')
+    return pd.read_parquet('data/data_encoded.parquet')
 
 df = load_data()
 #df[df['track_name'].str.contains(' remix', case=False)]
