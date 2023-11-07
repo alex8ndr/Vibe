@@ -131,6 +131,9 @@ cols = 2
 
 import base64
 
+import os
+print(os.listdir())
+
 with open("../app/Vibe Wide.png", "rb") as f:
     data = base64.b64encode(f.read()).decode("utf-8")
 
