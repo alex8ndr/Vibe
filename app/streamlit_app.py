@@ -131,7 +131,7 @@ cols = 2
 
 import base64
 
-with open("Vibe Wide.png", "rb") as f:
+with open("../app/Vibe Wide.png", "rb") as f:
     data = base64.b64encode(f.read()).decode("utf-8")
 
     st.sidebar.markdown(
