@@ -4,7 +4,7 @@ import numpy as np
 from scipy.spatial.distance import cdist
 import random
 from datetime import datetime
-from streamlit_gsheets import GSheetsConnection
+#from streamlit_gsheets import GSheetsConnection
 
 # Print the songs from the given artist
 def print_songs_from_artist(artist_name):
@@ -164,6 +164,7 @@ def load_data():
     return pd.read_parquet('data/data_encoded.parquet')
 
 df = load_data()
+#df[df['track_name'].str.contains(' remix', case=False)]
 
 # Create multiselect for artist selection
 artist_names = df['artist_name'].unique()
@@ -176,7 +177,7 @@ for artist in artists:
     selection_dict[artist] = []
     st.sidebar.write(f"### {artist}")
     track_names = df[df['artist_name']==artist]['track_name'].unique()
-    selected_tracks = st.sidebar.multiselect('Select specific songs', track_names, default=[], key=artist, max_selections=3)
+    selected_tracks = st.sidebar.multiselect('Select specific songs', track_names, default=[], key=artist)
     for track_name in selected_tracks:
         if track_name != '':
             selection_dict[artist].append(track_name)
@@ -214,29 +215,6 @@ def save_recommendations(artist_dict, recommendations):
     html += "</body></html>"
     return html
 
-def save_input_artists(artists_songs):
-    conn = st.connection("gsheets", type=GSheetsConnection, ttl=0)
-    sheet = conn.read(worksheet="Data", usecols=list(range(21)), ttl=0)
-
-    # Create a new row with the current date and time
-    new_row = [datetime.now().strftime("%Y%m%d-%H%M%S")]
-
-    # Add the artists and songs to the new row
-    for artist, songs in artists_songs.items():
-        new_row += [artist] + songs + [None] * (3 - len(songs))
-
-    # Pad new_row with None for any missing columns
-    new_row += [None] * (len(sheet.columns) - len(new_row))
-
-    # Convert new_row to a DataFrame
-    new_row_df = pd.DataFrame([new_row], columns=sheet.columns)
-
-    # Find the first non-NaN row
-    sheet = sheet.dropna(how="all")
-
-    sheet = pd.concat([sheet, new_row_df], ignore_index=False)
-    conn.update(worksheet="Data", data=sheet)
-
 if len(artists) > 0:
     #add button to search for similar artists and songs
     if st.sidebar.button('Search for similar artists'):
@@ -260,9 +238,7 @@ if len(artists) > 0:
 
             # Save recommendations as a file
             st.download_button('Download recommendations', save_recommendations(selection_dict, recommendations), file_name='recommendations' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.html')
-
-            save_input_artists(selection_dict)
-
+                
     else:
         st.header('Vibe - Music Recommendation System')
         st.divider()
@@ -275,5 +251,3 @@ else:
 
     #instructions to search
     st.write('#### Select at least one artist to generate recommendations')
-
-
