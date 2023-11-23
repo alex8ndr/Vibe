@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial.distance import cdist
 import random
+from datetime import datetime
 #from streamlit_gsheets import GSheetsConnection
 
 # Print the songs from the given artist
@@ -77,7 +78,9 @@ def get_artist_by_track_id(track_id):
 # Calculates the total score for each artist based on their top 4 songs in the list
 # Returns the top 5 artists and their top 4 songs
 def generate_recommendations(input_artists, features, randomness = 1):
-    n = 100 * randomness
+    n = 100
+    if randomness > 2:
+        n = n * (randomness - 1)
     similar = search_songs_by_features(features, n=n)
     song_artists = similar[0]
     similar_ids = similar[1]
@@ -129,18 +132,18 @@ st.set_page_config(page_title='Vibe - Music Recommendation System',
 
 cols = 2
 
+#import os
+#print(os.listdir())
+
 import base64
 
-import os
-print(os.listdir())
-
-with open("app/Vibe Wide.png", "rb") as f:
+with open("app/Vibe Wide Cropped.png", "rb") as f:
     data = base64.b64encode(f.read()).decode("utf-8")
 
     st.sidebar.markdown(
         f"""
-        <div style="display:table;margin-top:-32%;margin-left:-5%;margin-bottom:10%">
-            <img src="data:image/png;base64,{data}" width="334" height="167">
+        <div style="display:table;margin-top:-32%;margin-left:-5.5%;margin-bottom:10%">
+            <img src="data:image/png;base64,{data}" width="336" height="168">
         </div>
         """,
         unsafe_allow_html=True,
@@ -153,8 +156,8 @@ with open("app/Vibe Wide.png", "rb") as f:
 with st.sidebar.expander('Settings', expanded=False):
     #add slider for number of columns
     #cols = st.slider('Number of columns', 1, 4, 3)
-    max_artists = st.slider('Maximum number of recommended artists', 1, 10, 6)
-    randomness = st.slider('Variance', 1, 5, 1, help='This parameter increses the variance of recommendations. The default setting of 1 will always give the same recommendations for identical inputs. Higher values will give more diverse recommendations.')
+    max_artists = st.slider('Maximum number of recommended artists', 1, 6, 4)
+    randomness = st.slider('Variance', 1, 5, 2, help='This parameter increses the variance of recommendations. The lowest setting of 1 will always give the same recommendations for identical inputs. Higher values will give more diverse recommendations.')
 
 @st.cache_data
 def load_data():
@@ -165,21 +168,52 @@ df = load_data()
 
 # Create multiselect for artist selection
 artist_names = df['artist_name'].unique()
-artists = st.sidebar.multiselect('Select up to 5 artists', artist_names, default=[], key='artists')
+artists = st.sidebar.multiselect('Select up to 5 artists', artist_names, default=[], key='artists', max_selections=5)
 
 # Create song selection for each artist
 track_ids = []
+selection_dict = {}
 for artist in artists:
+    selection_dict[artist] = []
     st.sidebar.write(f"### {artist}")
     track_names = df[df['artist_name']==artist]['track_name'].unique()
     selected_tracks = st.sidebar.multiselect('Select specific songs', track_names, default=[], key=artist)
     for track_name in selected_tracks:
         if track_name != '':
+            selection_dict[artist].append(track_name)
             # Check that artist and track name are unique
             track_id = df[(df['artist_name']==artist) & (df['track_name']==track_name)]['track_id'].unique()[0]
             track_ids.append(track_id)
 
 
+def save_recommendations(artist_dict, recommendations):
+    # Save recommendations as an HTML file
+    html = """
+    <html>
+    <head>
+        <title>Vibe Recommendations</title>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+            iframe {
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+    """
+    html += "<h1>Input Artists:</h1>"
+    html += ', '.join([f"{artist} ({', '.join(songs)})" for artist, songs in artist_dict.items()])
+    
+    html += "<h1>Recommendations:</h1>"
+    for artist, songs in recommendations.items():
+        html += f"<h2>{artist}</h2>"
+        for song_id in songs:
+            html += f'<iframe src="https://open.spotify.com/embed/track/{song_id}" width="275" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
+            html += "   "
+    html += "</body></html>"
+    return html
 
 if len(artists) > 0:
     #add button to search for similar artists and songs
@@ -196,11 +230,15 @@ if len(artists) > 0:
             for i, (artist, songs) in enumerate(recommendations.items()):
                 col_index = i % cols
                 with col_list[col_index]:
-                    st.write(f"### {artist}")
+                    st.write("### " + artist.replace('$', '\$'))
                     for song_id in songs:
                         st.write(f'<iframe src="https://open.spotify.com/embed/track/{song_id}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>', unsafe_allow_html=True)
                     #st.divider()
                     st.text("")
+
+            # Save recommendations as a file
+            st.download_button('Download recommendations', save_recommendations(selection_dict, recommendations), file_name='recommendations' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.html')
+                
     else:
         st.header('Vibe - Music Recommendation System')
         st.divider()
@@ -213,5 +251,3 @@ else:
 
     #instructions to search
     st.write('#### Select at least one artist to generate recommendations')
-
-
