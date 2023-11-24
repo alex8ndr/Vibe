@@ -6,7 +6,7 @@ Original dataset of songs retrieved from [Kaggle](https://www.kaggle.com/dataset
 
 ## Description
 
-Vibe is a content-based music recommendation system with a database of fifty thousand unique artists and a million songs released between 2000 and 2023. The system can handle both artists and specific songs as input; recommendations are generated using SciPy's cdist method by selecting the songs in the dataset with the lowest Euclidean distance from the given input.
+Vibe is a content-based music recommendation system with a dataset of over fifty thousand unique artists and a million songs released between 2000 and 2023. The system can handle both artists and specific songs as input; recommendations are generated using SciPy's cdist method by selecting the songs in the dataset with the smallest Euclidean distance from the given input.
 
 ## Using the app
 
