@@ -1,16 +1,29 @@
 # Vibe - Music Recommendation System
-### Find artists you'll vibe with!
+### Find music that you'll vibe with!
 
-#### Deliverable 1 
+Final project for the McGill AI Society's Accelerated Introduction to Machine Learning Bootcamp (Fall 2023). 
+Original dataset of songs retrieved from [Kaggle](https://www.kaggle.com/datasets/amitanshjoshi/spotify-1million-tracks/).
 
-Report: [Project Proposal.pdf](<https://github.com/Al3x-T/Vibe/blob/main/MAIS 202/Project%20Proposal.pdf>)
+## Description
 
-#### Deliverable 2 
+Vibe is a content-based music recommendation system with a database of fifty thousand unique artists and a million songs released between 2000 and 2023. The system can handle both artists and specific songs as input; recommendations are generated using SciPy's cdist method by selecting the songs in the dataset with the lowest Euclidean distance from the given input.
 
-Report: [Preliminary Results.pdf](<https://github.com/Al3x-T/Vibe/blob/main/MAIS 202/Preliminary%20Results.pdf>)
+## Using the app
 
-Code: [preliminary_results.ipynb](<https://github.com/Al3x-T/Vibe/blob/main/MAIS 202/preliminary_results.ipynb>)
+Vibe is hosted and available online on [Streamlit](https://vibe-music.streamlit.app) and [Hugging Face](https://huggingface.co/spaces/Al3x-T/Vibe).
 
-#### Deliverable 3
+To run the app locally, install the packages in requirements.txt and and run
 
-Report: [Final Results.pdf](<https://github.com/Al3x-T/Vibe/blob/main/MAIS 202/Final%20Results.pdf>)
+```
+streamlit run app/streamlit_app_local.py
+```
+
+## Repository organization
+
+1. app/
+	* files for the Streamlit application
+2. data/
+	* process_data.ipynb: file used to process the data.csv obtained from Kaggle and save it as a Parquet file
+    * data_encoded.parquet: processed data used by the Streamlit application to generate recommendations
+3. MAIS 202/
+	* deliverables submitted to the MAIS 202 bootcamp
