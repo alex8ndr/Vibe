@@ -142,7 +142,7 @@ with open("app/Vibe Wide Cropped.png", "rb") as f:
 
     st.sidebar.markdown(
         f"""
-        <div style="display:table;margin-top:-33%;margin-left:-8.5%;margin-bottom:10%">
+        <div style="display:table;margin-top:-28%;margin-left:-9%;margin-right:-10%;margin-bottom:10%">
             <img src="data:image/png;base64,{data}" width="336" height="168">
         </div>
         """,
